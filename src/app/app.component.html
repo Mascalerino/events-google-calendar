@@ -1,7 +1,8 @@
 <div class="container">
-  <h1 class="text-center">Eventos en Google Calendar</h1>
+  <h1 class="text-center">Crear Evento</h1>
 
   <div class="row">
+    <!-- Validación ID del Calendario -->
     <div class="col-md-12 col-sm-12 mb-3">
       <label for="calendarId">ID del Calendario:</label>
       <input
@@ -10,14 +11,19 @@
         type="text"
         placeholder="ID del calendario"
         [(ngModel)]="calendarId"
-        name="calendarId"
-        required
-        [ngClass]="{ 'is-invalid': !calendarId && formSubmitted }"
+        [ngClass]="{
+          'is-invalid': !isValidCalendarId(calendarId) && formSubmitted
+        }"
       />
-      <div *ngIf="!calendarId && formSubmitted" class="invalid-feedback">
+      <div
+        *ngIf="!isValidCalendarId(calendarId) && formSubmitted"
+        class="invalid-feedback"
+      >
         Este campo es obligatorio.
       </div>
     </div>
+
+    <!-- Fecha del Evento -->
     <div class="col-md-12 col-sm-12 mb-3">
       <label for="eventDate">Fecha del Evento:</label>
       <input
@@ -26,33 +32,69 @@
         type="date"
         [(ngModel)]="eventDate"
         name="eventDate"
+        [ngClass]="{ 'is-invalid': !isValidDate(eventDate) && formSubmitted }"
         required
-        [ngClass]="{ 'is-invalid': !eventDate && formSubmitted }"
       />
-      <div *ngIf="!eventDate && formSubmitted" class="invalid-feedback">
+      <div
+        *ngIf="!isValidDate(eventDate) && formSubmitted"
+        class="invalid-feedback"
+      >
         Este campo es obligatorio.
       </div>
     </div>
+
+    <!-- Hora de Inicio -->
     <div class="col-md-12 col-sm-12 mb-3">
       <label for="startTime">Hora de Inicio:</label>
       <input
         id="startTime"
         class="form-control"
         type="text"
-        placeholder="18:00"
+        placeholder="Ejemplo: 18:00"
         [(ngModel)]="startTime"
         name="startTime"
         required
-        [ngClass]="{ 'is-invalid': !isValidTime(startTime) && formSubmitted }"
         (input)="validateTime(startTime)"
+        [ngClass]="{ 'is-invalid': !isValidTime(startTime) && formSubmitted }"
       />
       <div
         *ngIf="!isValidTime(startTime) && formSubmitted"
         class="invalid-feedback"
       >
-        Hora inválida. Formato esperado: HH:mm (hora entre 0-24, minutos entre
-        0-59).
+        El formato de hora debe ser HH:mm.
       </div>
+    </div>
+
+    <!-- Duración del Evento -->
+    <div class="col-md-12 col-sm-12 mb-3">
+      <label for="eventDuration">Duración del Evento (minutos):</label>
+      <input
+        id="eventDuration"
+        class="form-control"
+        type="number"
+        placeholder="Duración en minutos"
+        [(ngModel)]="eventDuration"
+        name="eventDuration"
+        required
+        min="1"
+        [ngClass]="{ 'is-invalid': !eventDuration && formSubmitted }"
+      />
+      <div *ngIf="!eventDuration && formSubmitted" class="invalid-feedback">
+        Este campo es obligatorio.
+      </div>
+    </div>
+
+    <!-- Selector de Zona Horaria -->
+    <div class="col-md-12 col-sm-12 mb-3">
+      <label for="selectedTimezone">Seleccionar Zona Horaria:</label>
+      <select
+        id="selectedTimezone"
+        class="form-control"
+        [(ngModel)]="selectedTimezone"
+        required
+      >
+        <option *ngFor="let tz of timezones" [value]="tz">{{ tz }}</option>
+      </select>
     </div>
 
     <!-- Títulos de eventos dinámicos -->
@@ -97,6 +139,7 @@
   </div>
 
   <div class="text-center">
+    <!-- Botón para crear el evento -->
     <button class="btn btn-primary mt-3" (click)="createEvent()">
       Crear Evento
     </button>

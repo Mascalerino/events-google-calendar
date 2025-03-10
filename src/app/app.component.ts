@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import * as moment from 'moment-timezone';
 
 @Component({
   selector: 'app-root',
@@ -10,10 +11,21 @@ import { FormsModule } from '@angular/forms';
 })
 export class AppComponent {
   eventTitles: string[] = [''];
-  calendarId: string = '';
+  calendarId: string = ''; // Este campo no se usará por ahora, ya que no se creará el evento en Google
   eventDate: string = '';
-  startTime: string = ''; // Inicializado como cadena vacía
+  startTime: string = ''; // Hora de inicio
+  eventDuration: number | null = null; // Duración del evento en minutos
+  selectedTimezone: string = ''; // Zona horaria seleccionada
   formSubmitted: boolean = false;
+
+  // Lista de zonas horarias para el input select
+  timezones: string[] = [];
+
+  ngOnInit() {
+    // Cargar las zonas horarias utilizando moment-timezone
+    this.timezones = moment.tz.names(); // Devuelve una lista con todas las zonas horarias
+    this.selectedTimezone = moment.tz.guess(); // Obtiene la zona horaria local por defecto
+  }
 
   // Función para agregar un nuevo campo de título
   addTitle() {
@@ -32,46 +44,60 @@ export class AppComponent {
     this.eventTitles = [''];
     this.calendarId = '';
     this.eventDate = '';
-    this.startTime = ''; // Reiniciar a cadena vacía
-    this.formSubmitted = false; // Reiniciar la bandera de envío
+    this.startTime = '';
+    this.eventDuration = null;
+    this.selectedTimezone = moment.tz.guess(); // Restablecer zona horaria
+    this.formSubmitted = false;
   }
 
-  // Función para validar el formato de hora
-  validateTime(value: string) {
-    if (this.isValidTime(value)) {
-      this.startTime = value;
-    }
-  }
-
-  // Función para verificar si el formato de hora es válido (HH:mm)
+  // Función para validar el formato de la hora (HH:mm)
   isValidTime(value: string): boolean {
     const timePattern = /^([01]?[0-9]|2[0-3]):([0-5][0-9])$/; // Expresión regular para HH:mm
     const match = value.match(timePattern);
-    if (match) {
-      const hours = parseInt(match[1], 10);
-      const minutes = parseInt(match[2], 10);
-      return hours >= 0 && hours <= 24 && minutes >= 0 && minutes < 60;
-    }
-    return false;
+    return match !== null;
   }
 
-  // Función para crear el evento (simulada en la consola)
+  // Función para validar el ID del calendario
+  isValidCalendarId(value: string): boolean {
+    return value.trim().length > 0; // Validar que no esté vacío
+  }
+
+  // Función para validar la fecha del evento
+  isValidDate(value: string): boolean {
+    return value.trim().length > 0; // Validar que la fecha no esté vacía
+  }
+
+  // Función para validar el formato de la hora
+  validateTime(value: string) {
+    if (this.isValidTime(value)) {
+      this.startTime = value;
+    } else {
+      console.log('Hora no válida, el formato debe ser HH:mm');
+    }
+  }
+
+  // Función para la validación general antes de crear el evento (sin lógica del evento por ahora)
   createEvent() {
     this.formSubmitted = true;
 
-    // Validar si todos los campos son completos
+    // Validar si todos los campos son completos y correctos
     if (
-      this.calendarId &&
-      this.eventDate &&
-      this.isValidTime(this.startTime) &&
-      this.eventTitles.every((title) => title)
+      this.isValidCalendarId(this.calendarId) && // Validar ID del calendario
+      this.isValidDate(this.eventDate) && // Validar fecha del evento
+      this.isValidTime(this.startTime) && // Validar hora de inicio
+      this.eventDuration !== null && // Validar duración
+      this.selectedTimezone &&
+      this.eventTitles.every((title) => title) // Validar que todos los títulos estén completos
     ) {
-      console.log('Evento creado:', {
-        calendarId: this.calendarId,
+      console.log('Evento creado: ', {
+        calendarId: this.calendarId, // Este campo ya no se usará por ahora
         eventDate: this.eventDate,
         startTime: this.startTime,
+        eventDuration: this.eventDuration,
+        selectedTimezone: this.selectedTimezone,
         eventTitles: this.eventTitles,
       });
+      alert('Evento creado con los datos proporcionados!');
     } else {
       console.log('Por favor, completa todos los campos correctamente');
     }
