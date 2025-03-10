@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import * as moment from 'moment-timezone';
 
 @Component({
   selector: 'app-root',
@@ -15,17 +14,10 @@ export class AppComponent {
   eventDate: string = '';
   startTime: string = ''; // Hora de inicio
   eventDuration: number | null = null; // Duración del evento en minutos
-  selectedTimezone: string = ''; // Zona horaria seleccionada
   formSubmitted: boolean = false;
 
   // Lista de zonas horarias para el input select
   timezones: string[] = [];
-
-  ngOnInit() {
-    // Cargar las zonas horarias utilizando moment-timezone
-    this.timezones = moment.tz.names(); // Devuelve una lista con todas las zonas horarias
-    this.selectedTimezone = moment.tz.guess(); // Obtiene la zona horaria local por defecto
-  }
 
   // Función para agregar un nuevo campo de título
   addTitle() {
@@ -46,7 +38,6 @@ export class AppComponent {
     this.eventDate = '';
     this.startTime = '';
     this.eventDuration = null;
-    this.selectedTimezone = moment.tz.guess(); // Restablecer zona horaria
     this.formSubmitted = false;
   }
 
@@ -86,7 +77,6 @@ export class AppComponent {
       this.isValidDate(this.eventDate) && // Validar fecha del evento
       this.isValidTime(this.startTime) && // Validar hora de inicio
       this.eventDuration !== null && // Validar duración
-      this.selectedTimezone &&
       this.eventTitles.every((title) => title) // Validar que todos los títulos estén completos
     ) {
       console.log('Evento creado: ', {
@@ -94,7 +84,6 @@ export class AppComponent {
         eventDate: this.eventDate,
         startTime: this.startTime,
         eventDuration: this.eventDuration,
-        selectedTimezone: this.selectedTimezone,
         eventTitles: this.eventTitles,
       });
       alert('Evento creado con los datos proporcionados!');

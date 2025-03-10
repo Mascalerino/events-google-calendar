@@ -84,19 +84,6 @@
       </div>
     </div>
 
-    <!-- Selector de Zona Horaria -->
-    <div class="col-md-12 col-sm-12 mb-3">
-      <label for="selectedTimezone">Seleccionar Zona Horaria:</label>
-      <select
-        id="selectedTimezone"
-        class="form-control"
-        [(ngModel)]="selectedTimezone"
-        required
-      >
-        <option *ngFor="let tz of timezones" [value]="tz">{{ tz }}</option>
-      </select>
-    </div>
-
     <!-- Títulos de eventos dinámicos -->
     <div
       class="col-md-12 col-sm-12 mb-3"
