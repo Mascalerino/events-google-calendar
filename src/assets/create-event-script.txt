@@ -1,0 +1,36 @@
+function createCustomEvents() {
+  // Replace 'YOUR_CALENDAR_ID' with the calendar ID
+  var calendarId = '{{calendarId}}';
+  var calendar = CalendarApp.getCalendarById(calendarId);
+
+  if (!calendar) {
+    Logger.log("Calendar not found. Check the calendar ID.");
+    return;
+  }
+
+  // Get the calendar name
+  var nameCalendar = calendar.getName();
+
+  // Event date and start time configuration
+  var eventDate = "{{eventDate}}"; // Event date
+  var startTimeHour = {{startTimeHour}}; // Start hour
+  var startTimeMinute = {{startTimeMinute}}; // Start minute
+
+  // Event titles
+  var eventTitles = {{eventTitles}}; // Event titles
+
+  // Event duration in minutes
+  var durationMinutes = {{durationMinutes}}; // Duration of the event in minutes
+
+  // Create the events
+  for (var i = 0; i < eventTitles.length; i++) {
+    // Calculate the start and end time for each event
+    var eventStart = new Date(`${eventDate}T${String(startTimeHour).padStart(2, '0')}:${String(startTimeMinute).padStart(2, '0')}:00`);
+    eventStart.setMinutes(eventStart.getMinutes() + i * durationMinutes);
+    var eventEnd = new Date(eventStart.getTime() + durationMinutes * 60 * 1000);
+
+    // Create the event in the calendar
+    calendar.createEvent(eventTitles[i], eventStart, eventEnd);
+    Logger.log(`Event created in the calendar: ${nameCalendar} - ${eventTitles[i]} (${eventStart} - ${eventEnd})`);
+  }
+}

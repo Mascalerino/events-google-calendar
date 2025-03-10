@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -10,85 +12,102 @@ import { FormsModule } from '@angular/forms';
 })
 export class AppComponent {
   eventTitles: string[] = [''];
-  calendarId: string = ''; // Este campo no se usará por ahora, ya que no se creará el evento en Google
+  calendarId: string = '';
   eventDate: string = '';
-  startTime: string = ''; // Hora de inicio
-  eventDuration: number | null = null; // Duración del evento en minutos
+  startTimeHour: number = 9;
+  startTimeMinute: number = 0;
+  eventDuration: number | null = null;
   formSubmitted: boolean = false;
+  generatedScript: string = ''; // Variable to hold the generated script
 
-  // Lista de zonas horarias para el input select
-  timezones: string[] = [];
+  constructor(private http: HttpClient) {}
 
-  // Función para agregar un nuevo campo de título
+  ngOnInit() {}
+
+  // Function to track the index and prevent re-rendering of inputs
+  trackByIndex(index: number): number {
+    return index;
+  }
+
+  // Function to add a new title field
   addTitle() {
     this.eventTitles.push('');
   }
 
-  // Función para eliminar un campo de título
+  // Function to remove a title field
   removeTitle(index: number) {
     if (this.eventTitles.length > 1) {
       this.eventTitles.splice(index, 1);
     }
   }
 
-  // Función para limpiar todos los campos
+  // Function to reset all fields
   resetForm() {
     this.eventTitles = [''];
     this.calendarId = '';
     this.eventDate = '';
-    this.startTime = '';
+    this.startTimeHour = 9;
+    this.startTimeMinute = 0;
     this.eventDuration = null;
     this.formSubmitted = false;
+    this.generatedScript = ''; // Clear generated script
   }
 
-  // Función para validar el formato de la hora (HH:mm)
-  isValidTime(value: string): boolean {
-    const timePattern = /^([01]?[0-9]|2[0-3]):([0-5][0-9])$/; // Expresión regular para HH:mm
-    const match = value.match(timePattern);
-    return match !== null;
-  }
-
-  // Función para validar el ID del calendario
+  // Function to validate the calendar ID (it must not be empty)
   isValidCalendarId(value: string): boolean {
-    return value.trim().length > 0; // Validar que no esté vacío
+    return value.trim().length > 0;
   }
 
-  // Función para validar la fecha del evento
+  // Function to validate the event date (it must not be empty)
   isValidDate(value: string): boolean {
-    return value.trim().length > 0; // Validar que la fecha no esté vacía
+    return value.trim().length > 0;
   }
 
-  // Función para validar el formato de la hora
-  validateTime(value: string) {
-    if (this.isValidTime(value)) {
-      this.startTime = value;
-    } else {
-      console.log('Hora no válida, el formato debe ser HH:mm');
-    }
+  // Function to validate time (hour and minute)
+  isValidTime(hour: number, minute: number): boolean {
+    return hour >= 0 && hour <= 23 && minute >= 0 && minute <= 59; // Valid hour and minute
   }
 
-  // Función para la validación general antes de crear el evento (sin lógica del evento por ahora)
-  createEvent() {
+  // Function to generate the event creation script with the provided data
+  generateEventScript() {
     this.formSubmitted = true;
 
-    // Validar si todos los campos son completos y correctos
     if (
-      this.isValidCalendarId(this.calendarId) && // Validar ID del calendario
-      this.isValidDate(this.eventDate) && // Validar fecha del evento
-      this.isValidTime(this.startTime) && // Validar hora de inicio
-      this.eventDuration !== null && // Validar duración
-      this.eventTitles.every((title) => title) // Validar que todos los títulos estén completos
+      this.isValidCalendarId(this.calendarId) &&
+      this.isValidDate(this.eventDate) &&
+      this.isValidTime(this.startTimeHour, this.startTimeMinute) &&
+      this.eventDuration !== null &&
+      this.eventTitles.every((title) => title)
     ) {
-      console.log('Evento creado: ', {
-        calendarId: this.calendarId, // Este campo ya no se usará por ahora
-        eventDate: this.eventDate,
-        startTime: this.startTime,
-        eventDuration: this.eventDuration,
-        eventTitles: this.eventTitles,
+      // Load the script from the external file
+      this.loadScript('assets/create-event-script.txt').subscribe((script) => {
+        // Replace placeholders in the script
+        this.generatedScript = script
+          .replace('{{calendarId}}', this.calendarId)
+          .replace('{{eventDate}}', this.eventDate)
+          .replace('{{startTimeHour}}', String(this.startTimeHour))
+          .replace('{{startTimeMinute}}', String(this.startTimeMinute))
+          .replace('{{eventTitles}}', JSON.stringify(this.eventTitles))
+          .replace('{{durationMinutes}}', String(this.eventDuration));
       });
-      alert('Evento creado con los datos proporcionados!');
     } else {
-      console.log('Por favor, completa todos los campos correctamente');
+      console.log('Please fill in all fields correctly');
     }
+  }
+
+  // Function to load the script file
+  loadScript(filePath: string): Observable<string> {
+    return this.http.get(filePath, { responseType: 'text' });
+  }
+
+  // Function to copy the generated script to the clipboard
+  copyToClipboard() {
+    const textarea = document.createElement('textarea');
+    textarea.value = this.generatedScript;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+    alert('Script copied to clipboard!');
   }
 }

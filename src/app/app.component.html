@@ -1,15 +1,15 @@
 <div class="container">
-  <h1 class="text-center">Crear Evento</h1>
+  <h1 class="text-center">Create Events Google Calendar</h1>
 
   <div class="row">
-    <!-- Validación ID del Calendario -->
+    <!-- Calendar ID Field -->
     <div class="col-md-12 col-sm-12 mb-3">
-      <label for="calendarId">ID del Calendario:</label>
+      <label for="calendarId">Calendar ID:</label>
       <input
         id="calendarId"
         class="form-control"
         type="text"
-        placeholder="ID del calendario"
+        placeholder="Calendar ID"
         [(ngModel)]="calendarId"
         [ngClass]="{
           'is-invalid': !isValidCalendarId(calendarId) && formSubmitted
@@ -19,13 +19,13 @@
         *ngIf="!isValidCalendarId(calendarId) && formSubmitted"
         class="invalid-feedback"
       >
-        Este campo es obligatorio.
+        This field is required.
       </div>
     </div>
 
-    <!-- Fecha del Evento -->
+    <!-- Event Date Field -->
     <div class="col-md-12 col-sm-12 mb-3">
-      <label for="eventDate">Fecha del Evento:</label>
+      <label for="eventDate">Event Date:</label>
       <input
         id="eventDate"
         class="form-control"
@@ -39,40 +39,55 @@
         *ngIf="!isValidDate(eventDate) && formSubmitted"
         class="invalid-feedback"
       >
-        Este campo es obligatorio.
+        This field is required.
       </div>
     </div>
 
-    <!-- Hora de Inicio -->
+    <!-- Start Time Fields (Hours and Minutes) -->
     <div class="col-md-12 col-sm-12 mb-3">
-      <label for="startTime">Hora de Inicio:</label>
+      <label for="startTimeHour">Start Time Hour:</label>
       <input
-        id="startTime"
+        id="startTimeHour"
         class="form-control"
-        type="text"
-        placeholder="Ejemplo: 18:00"
-        [(ngModel)]="startTime"
-        name="startTime"
+        type="number"
+        placeholder="Hour"
+        [(ngModel)]="startTimeHour"
+        min="0"
+        max="23"
         required
-        (input)="validateTime(startTime)"
-        [ngClass]="{ 'is-invalid': !isValidTime(startTime) && formSubmitted }"
+        [ngClass]="{
+          'is-invalid':
+            !isValidTime(startTimeHour, startTimeMinute) && formSubmitted
+        }"
       />
-      <div
-        *ngIf="!isValidTime(startTime) && formSubmitted"
-        class="invalid-feedback"
-      >
-        El formato de hora debe ser HH:mm.
-      </div>
     </div>
 
-    <!-- Duración del Evento -->
     <div class="col-md-12 col-sm-12 mb-3">
-      <label for="eventDuration">Duración del Evento (minutos):</label>
+      <label for="startTimeMinute">Start Time Minute:</label>
+      <input
+        id="startTimeMinute"
+        class="form-control"
+        type="number"
+        placeholder="Minute"
+        [(ngModel)]="startTimeMinute"
+        min="0"
+        max="59"
+        required
+        [ngClass]="{
+          'is-invalid':
+            !isValidTime(startTimeHour, startTimeMinute) && formSubmitted
+        }"
+      />
+    </div>
+
+    <!-- Event Duration Field -->
+    <div class="col-md-12 col-sm-12 mb-3">
+      <label for="eventDuration">Event Duration (minutes):</label>
       <input
         id="eventDuration"
         class="form-control"
         type="number"
-        placeholder="Duración en minutos"
+        placeholder="Duration in minutes"
         [(ngModel)]="eventDuration"
         name="eventDuration"
         required
@@ -80,23 +95,23 @@
         [ngClass]="{ 'is-invalid': !eventDuration && formSubmitted }"
       />
       <div *ngIf="!eventDuration && formSubmitted" class="invalid-feedback">
-        Este campo es obligatorio.
+        This field is required.
       </div>
     </div>
 
-    <!-- Títulos de eventos dinámicos -->
+    <!-- Event Titles -->
     <div
       class="col-md-12 col-sm-12 mb-3"
-      *ngFor="let title of eventTitles; let i = index"
+      *ngFor="let title of eventTitles; let i = index; trackBy: trackByIndex"
     >
-      <label for="eventTitle{{ i }}">Título del Evento {{ i + 1 }}:</label>
+      <label for="eventTitle{{ i }}">Event Title {{ i + 1 }}:</label>
       <div class="input-group">
         <input
           id="eventTitle{{ i }}"
           class="form-control"
           [(ngModel)]="eventTitles[i]"
           type="text"
-          placeholder="Título del evento"
+          placeholder="Event title"
           required
           [ngClass]="{ 'is-invalid': !title && formSubmitted }"
         />
@@ -120,18 +135,33 @@
         </div>
       </div>
       <div *ngIf="!title && formSubmitted" class="invalid-feedback">
-        Este campo es obligatorio.
+        This field is required.
       </div>
     </div>
   </div>
 
   <div class="text-center">
-    <!-- Botón para crear el evento -->
-    <button class="btn btn-primary mt-3" (click)="createEvent()">
-      Crear Evento
+    <!-- Button to generate the event creation script -->
+    <button class="btn btn-primary mt-3" (click)="generateEventScript()">
+      Generate Event Script
     </button>
     <button class="btn btn-warning mt-3 ml-2" (click)="resetForm()">
-      Limpiar
+      Reset
+    </button>
+  </div>
+
+  <!-- Display Generated Script -->
+  <div *ngIf="generatedScript" class="mt-4">
+    <h3>Generated Script</h3>
+    <textarea
+      id="generatedScript"
+      class="form-control"
+      rows="10"
+      readonly
+      [value]="generatedScript"
+    ></textarea>
+    <button class="btn btn-info mt-3" (click)="copyToClipboard()">
+      Copy to Clipboard
     </button>
   </div>
 </div>
