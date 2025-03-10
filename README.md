@@ -31,9 +31,9 @@ ng serve
 
 The application will be running at http://localhost:4200. Open it in your browser.
 
-### Using the Application
+## Using the Application
 
-1. Fill in the Event Information
+### 1. Fill in the Event Information
 
 On the app’s main page, you’ll see a form with the following fields:
 • Calendar ID: The ID of the Google Calendar where you want to create the events.
@@ -42,7 +42,7 @@ On the app’s main page, you’ll see a form with the following fields:
 • Event Duration: How long the event will last, in minutes.
 • Event Title(s): You can enter multiple event titles. Use the + button to add more titles and the - button to remove them.
 
-2. Generate the Google Apps Script
+### 2. Generate the Google Apps Script
 
 After filling in all the necessary fields, click the Generate Event Script button. This will generate a script that you can use to create events in your Google Calendar.
 
@@ -54,34 +54,34 @@ To use this application, you need the Calendar ID for the calendar where you wan
 
 Copy this Calendar ID and paste it into the Calendar ID field in the application.
 
-How to Execute the Script in Google Apps Script
+## How to Execute the Script in Google Apps Script
 
 After you generate the script, you can run it in Google Apps Script to create the events in your Google Calendar. Follow these steps:
 
-1. Create a Google Apps Script Project
+### 1. Create a Google Apps Script Project
 
-   1. Open Google Apps Script: https://script.google.com.
-   2. Click on New Project.
-   3. Give your project a name (e.g., Google Calendar Event Creator).
+1.  Open Google Apps Script: https://script.google.com.
+2.  Click on New Project.
+3.  Give your project a name (e.g., Google Calendar Event Creator).
 
-2. Create a New Script File
+### 2. Create a New Script File
 
-   1. In the Google Apps Script editor, click on File -> New -> Script File.
-   2. Name the file (e.g., createEvents.js) and click OK.
+1.  In the Google Apps Script editor, click on File -> New -> Script File.
+2.  Name the file (e.g., createEvents.js) and click OK.
 
-3. Paste the Script
+### 3. Paste the Script
 
-   1. Go back to your app and copy the generated script from the textarea.
-   2. Paste the script into the newly created createEvents.js file in the Google Apps Script editor.
+1.  Go back to your app and copy the generated script from the textarea.
+2.  Paste the script into the newly created createEvents.js file in the Google Apps Script editor.
 
-4. Run the Script
+### 4. Run the Script
 
-   1. Click the Run button (the triangle icon) at the top of the Google Apps Script editor.
-   2. The first time you run the script, it will ask for authorization. Click Review Permissions and choose your Google account.
-   3. Allow the necessary permissions for the script to access your Google Calendar and create events.
-   4. Once authorized, the script will run, and events will be created in your specified calendar.
+1.  Click the Run button (the triangle icon) at the top of the Google Apps Script editor.
+2.  The first time you run the script, it will ask for authorization. Click Review Permissions and choose your Google account.
+3.  Allow the necessary permissions for the script to access your Google Calendar and create events.
+4.  Once authorized, the script will run, and events will be created in your specified calendar.
 
-5. Schedule the Script (Optional)
+### 5. Schedule the Script (Optional)
 
 If you want to schedule this script to run automatically (e.g., daily or weekly), follow these steps:
 
@@ -89,10 +89,6 @@ If you want to schedule this script to run automatically (e.g., daily or weekly)
 2. Click on + Add Trigger in the lower-right corner.
 3. Choose createCustomEvents as the function to run, select the frequency (e.g., time-driven), and set the desired schedule.
 4. Click Save.
-
-Helpful Links
-• Google Apps Script Documentation
-• Google Calendar API Documentation
 
 Contributing
 
