@@ -22,26 +22,35 @@ export class AppComponent {
 
   constructor(private http: HttpClient) {}
 
-  ngOnInit() {}
-
-  // Function to track the index and prevent re-rendering of inputs
+  /**
+   * Function to track the index and prevent re-rendering of inputs
+   * @param index
+   * @returns
+   */
   trackByIndex(index: number): number {
     return index;
   }
 
-  // Function to add a new title field
+  /**
+   * Function to add a new title field
+   */
   addTitle() {
     this.eventTitles.push('');
   }
 
-  // Function to remove a title field
+  /**
+   * Function to remove a title field
+   * @param index
+   */
   removeTitle(index: number) {
     if (this.eventTitles.length > 1) {
       this.eventTitles.splice(index, 1);
     }
   }
 
-  // Function to reset all fields
+  /**
+   * Function to reset all fields
+   */
   resetForm() {
     this.eventTitles = [''];
     this.calendarId = '';
@@ -53,22 +62,9 @@ export class AppComponent {
     this.generatedScript = ''; // Clear generated script
   }
 
-  // Function to validate the calendar ID (it must not be empty)
-  isValidCalendarId(value: string): boolean {
-    return value.trim().length > 0;
-  }
-
-  // Function to validate the event date (it must not be empty)
-  isValidDate(value: string): boolean {
-    return value.trim().length > 0;
-  }
-
-  // Function to validate time (hour and minute)
-  isValidTime(hour: number, minute: number): boolean {
-    return hour >= 0 && hour <= 23 && minute >= 0 && minute <= 59; // Valid hour and minute
-  }
-
-  // Function to generate the event creation script with the provided data
+  /**
+   * Function to generate the event script
+   */
   generateEventScript() {
     this.formSubmitted = true;
 
@@ -95,12 +91,9 @@ export class AppComponent {
     }
   }
 
-  // Function to load the script file
-  loadScript(filePath: string): Observable<string> {
-    return this.http.get(filePath, { responseType: 'text' });
-  }
-
-  // Function to copy the generated script to the clipboard
+  /**
+   * Function to copy the generated script to the clipboard
+   */
   copyToClipboard() {
     const textarea = document.createElement('textarea');
     textarea.value = this.generatedScript;
@@ -110,4 +103,45 @@ export class AppComponent {
     document.body.removeChild(textarea);
     alert('Script copied to clipboard!');
   }
+
+  /**
+   *  Function to validate time (hour and minute)
+   * @param hour
+   * @param minute
+   * @returns
+   */
+  isValidTime(hour: number, minute: number): boolean {
+    return hour >= 0 && hour <= 23 && minute >= 0 && minute <= 59; // Valid hour and minute
+  }
+
+  /**
+   * Function to validate the event date (it must not be empty)
+   * @param value
+   * @returns
+   */
+  isValidDate(value: string): boolean {
+    return value.trim().length > 0;
+  }
+
+  /**
+   * Function to validate the calendar ID (it must not be empty)
+   * @param value
+   * @returns
+   */
+  isValidCalendarId(value: string): boolean {
+    return value.trim().length > 0;
+  }
+
+  //#region Private Functions
+
+  /**
+   * Function to load the script file
+   * @param filePath
+   * @returns
+   */
+  private loadScript(filePath: string): Observable<string> {
+    return this.http.get(filePath, { responseType: 'text' });
+  }
+
+  //#endregion
 }
