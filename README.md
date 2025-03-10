@@ -36,11 +36,12 @@ The application will be running at http://localhost:4200. Open it in your browse
 ### 1. Fill in the Event Information
 
 On the app’s main page, you’ll see a form with the following fields:
-• Calendar ID: The ID of the Google Calendar where you want to create the events.
-• Event Date: The date of the event.
-• Start Time: The time when the event will begin (in hours and minutes).
-• Event Duration: How long the event will last, in minutes.
-• Event Title(s): You can enter multiple event titles. Use the + button to add more titles and the - button to remove them.
+
+- Calendar ID: The ID of the Google Calendar where you want to create the events.
+- Event Date: The date of the event.
+- Start Time: The time when the event will begin (in hours and minutes).
+- Event Duration: How long the event will last, in minutes.
+- Event Title(s): You can enter multiple event titles. Use the + button to add more titles and the - button to remove them.
 
 ### 2. Generate the Google Apps Script
 
@@ -50,7 +51,13 @@ The script will be displayed in a textarea on the screen, and you can copy it to
 
 How to Find Your Google Calendar ID
 
-To use this application, you need the Calendar ID for the calendar where you want to create events. Follow these steps to find it: 1. Open Google Calendar in your browser: https://calendar.google.com. 2. On the left side, under “My calendars”, find the calendar where you want to add events. 3. Hover over the calendar name, click on the three vertical dots (options menu), and select Settings and sharing. 4. Scroll down to the “Integrate calendar” section. 5. Here, you will find the Calendar ID in the format of an email address (e.g., your-calendar-id@group.calendar.google.com).
+To use this application, you need the Calendar ID for the calendar where you want to create events. Follow these steps to find it:
+
+1. Open Google Calendar in your browser: https://calendar.google.com.
+2. On the left side, under “My calendars”, find the calendar where you want to add events.
+3. Hover over the calendar name, click on the three vertical dots (options menu), and select Settings and sharing.
+4. Scroll down to the “Integrate calendar” section.
+5. Here, you will find the Calendar ID in the format of an email address (e.g., your-calendar-id@group.calendar.google.com).
 
 Copy this Calendar ID and paste it into the Calendar ID field in the application.
 
