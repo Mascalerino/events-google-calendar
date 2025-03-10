@@ -1,0 +1,38 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.container {
+  width: 100%;
+  max-width: 960px; /* Ajusta según lo necesites */
+}
+
+.row {
+  padding-bottom: 20px; /* Ajusta el valor según lo necesites */
+}
+
+/* Asegúrate de que los botones no se junten */
+.btn {
+  margin-left: 5px; /* Ajusta el valor según lo necesites */
+}
+
+/* Separación entre el input y los botones */
+.input-group {
+  margin-bottom: 10px; /* Espacio entre el input y los botones */
+}
+
+/* Estilo para los campos no válidos */
+.is-invalid {
+  border-color: #dc3545;
+}
+
+/* Estilo para los mensajes de error */
+.invalid-feedback {
+  display: block;
+  color: #dc3545;
+  font-size: 0.875em;
+}
