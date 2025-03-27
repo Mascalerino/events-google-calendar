@@ -13,7 +13,7 @@ import { Observable } from 'rxjs';
 export class AppComponent {
   eventTitles: string[] = [''];
   calendarId: string = '';
-  eventDate: string = '';
+  eventDate: string = new Date().toISOString().split('T')[0];
   startTimeHour: number = 9;
   startTimeMinute: number = 0;
   eventDuration: number | null = null;
@@ -53,13 +53,12 @@ export class AppComponent {
    */
   resetForm() {
     this.eventTitles = [''];
-    this.calendarId = '';
-    this.eventDate = '';
+    this.eventDate = new Date().toISOString().split('T')[0];
     this.startTimeHour = 9;
     this.startTimeMinute = 0;
     this.eventDuration = null;
     this.formSubmitted = false;
-    this.generatedScript = ''; // Clear generated script
+    this.generatedScript = '';
   }
 
   /**
